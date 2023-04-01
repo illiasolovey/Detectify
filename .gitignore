@@ -1,0 +1,45 @@
+# Aws credentials are stored in configuration file..
+# ..ignored below during development, see Readme..
+# for more information.
+appsettings.Development.json
+appsettings.json
+Properties/
+
+node_modules
+package-lock.json
+
+[Dd]ebug/
+[Dd]ebugPublic/
+[Rr]elease/
+[Rr]eleases/
+x64/
+x86/
+bld/
+[Bb]in/
+[Oo]bj/
+[Ll]og/
+
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+dist
+dist-ssr
+*.local
+
+.vscode/*
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+*.[Cc]ache
+!*.[Cc]ache/
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
