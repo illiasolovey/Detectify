@@ -15,7 +15,7 @@ export default function HomePage() {
         </Typography>
       </Container>
       <Stack direction="row" justifyContent="center" spacing={2} sx={{ py: 4 }}>
-        <Link to="/recognize" style={{ textDecoration: "none" }}>
+        <Link to="/search" style={{ textDecoration: "none" }}>
           <Button variant="contained">Recognize</Button>
         </Link>
         <Button variant="outlined" href="https://github.com/illiasolovey/pupsearch" target="_blank">
