@@ -1,5 +1,6 @@
 using PupSearch.Filters;
 using PupSearch.Models;
+using PupSearch.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -7,8 +8,9 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddMemoryCache();
-builder.Services.AddScoped<AwsConfiguration>();
-builder.Services.AddScoped<CacheFilter>();
+builder.Services.AddSingleton<AwsConfiguration>();
+builder.Services.AddSingleton<CacheFilter>();
+builder.Services.AddSingleton<IStorageService, StorageService>();
 
 var corsConfig = builder.Configuration.GetSection("Cors");
 string cors = corsConfig["PolicyName"] ?? throw new Exception("Cors policy name is not specified.");
