@@ -9,12 +9,14 @@ namespace PupSearch.Services
 {
     public class StorageService : IStorageService, IDisposable
     {
-        private readonly string _bucketName;
+        private readonly string _putBucket;
+        private readonly string _getBucket;
         private readonly AmazonS3Client _awsS3Client;
 
         public StorageService(AwsConfiguration awsConfiguration)
         {
-            _bucketName = awsConfiguration.S3Buckets.Put;
+            _putBucket = awsConfiguration.S3Buckets.Put;
+            _getBucket = awsConfiguration.S3Buckets.Get;
             _awsS3Client = new AmazonS3Client(
                 awsConfiguration.AccessKey,
                 awsConfiguration.SecretKey,
@@ -31,7 +33,7 @@ namespace PupSearch.Services
                 {
                     InputStream = s3Object.InputStream,
                     Key = s3Object.Name,
-                    BucketName = _bucketName,
+                    BucketName = _putBucket,
                     CannedACL = S3CannedACL.NoACL
                 };
                 await transferUtility.UploadAsync(uploadRequest);
@@ -48,7 +50,7 @@ namespace PupSearch.Services
             {
                 GetObjectRequest getObjectRequest = new GetObjectRequest
                 {
-                    BucketName = _bucketName,
+                    BucketName = _getBucket,
                     Key = filename
                 };
                 using var response = await _awsS3Client.GetObjectAsync(getObjectRequest);

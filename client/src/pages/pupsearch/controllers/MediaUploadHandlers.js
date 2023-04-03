@@ -12,7 +12,7 @@ export function onFileInput(event, setCurrentFile, setPreviewUrl) {
   toast.success(`${file.name} selected`);
 }
 
-export async function onFileSubmit(currentFile, setFileUploaded) {
+export async function onFileSubmit(currentFile, setFileUploaded, setRenderedFileName) {
   const formData = new FormData();
   formData.append("formFile", currentFile);
   const url = endpoint + "upload/" + currentFile.name;
@@ -22,8 +22,9 @@ export async function onFileSubmit(currentFile, setFileUploaded) {
     },
   };
   try {
-    await axios.post(url, formData, requestConfig);
+    const response = await axios.post(url, formData, requestConfig);
     setFileUploaded(true);
+    setRenderedFileName(response.data);
     toast.success(`${currentFile.name} uploaded`);
   } catch (err) {
     toast.error("Upload error");

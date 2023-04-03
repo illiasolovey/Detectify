@@ -4,7 +4,7 @@ import { API_ENDPOINT } from "../../../../appsettings.json";
 
 const endpoint = API_ENDPOINT + "lambda/";
 
-export async function invokeObjectAnalysis(currentFile, setPreviewUrl) {
+export async function invokeObjectAnalysis(currentFile, setPreviewUrl, setFileAnalyzed) {
   const url = endpoint + "object-analysis";
   const requestConfig = {
     params: { filename: currentFile.name },
@@ -15,6 +15,7 @@ export async function invokeObjectAnalysis(currentFile, setPreviewUrl) {
   try {
     const response = await axios.get(url, requestConfig);
     setPreviewUrl(response.data);
+    setFileAnalyzed(true);
     toast.success("Lambda");
   } catch (err) {
     console.log(err);

@@ -12,11 +12,14 @@ import { onFileInput, onFileSubmit } from "./controllers/MediaUploadHandlers";
 import { invokeObjectAnalysis } from "./controllers/LambdaInteractionHandlers";
 import { PaperNote } from "./components/StyledComponents";
 import { quickGuide } from "./components/Content";
+import { DownloadButton } from "./components/DownloadButton";
 
 export default function HomePage() {
   const [currentFile, setCurrentFile] = useState(null);
+  const [renderedFileName, setRenderedFileName] = useState();
   const [previewUrl, setPreviewUrl] = useState();
   const [fileUploaded, setFileUploaded] = useState(false);
+  const [fileAnalyzed, setFileAnalyzed] = useState(false);
 
   return (
     <Grid container component="main" sx={{ height: "100vh" }}>
@@ -82,7 +85,9 @@ export default function HomePage() {
           ) : (
             <Button
               variant="outlined"
-              onClick={() => onFileSubmit(currentFile, setFileUploaded)}
+              onClick={() =>
+                onFileSubmit(currentFile, setFileUploaded, setRenderedFileName)
+              }
               sx={{ my: 6 }}
             >
               Submit
@@ -91,12 +96,19 @@ export default function HomePage() {
           {previewUrl && (
             <Button
               disabled={!fileUploaded}
-              onClick={() => invokeObjectAnalysis(currentFile, setPreviewUrl)}
+              onClick={() =>
+                invokeObjectAnalysis(
+                  currentFile,
+                  setPreviewUrl,
+                  setFileAnalyzed
+                )
+              }
               sx={{ my: 6 }}
             >
               <img src={previewUrl} alt="Preview" width="100%" height="100%" />
             </Button>
           )}
+          {fileAnalyzed && <DownloadButton filename={renderedFileName} />}
           <Grid container spacing={4} justify="space-evenly" textAlign="center">
             {quickGuide.map((footer) => (
               <Grid item xs key={footer.title}>

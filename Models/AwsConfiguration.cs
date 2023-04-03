@@ -32,9 +32,13 @@ public class AwsConfiguration
 
     public class S3Bucket
     {
-        public S3Bucket() =>
+        public S3Bucket()
+        {
             Put = _configuration["S3Bucket:Put"] ?? throw new Exception(_nullDeserializationExceptionMessage);
+            Get = _configuration["S3Bucket:Get"] ?? throw new Exception(_nullDeserializationExceptionMessage);
+        }
 
         public string Put { get; private set; }
+        public string Get { get; private set; }
     }
 }
