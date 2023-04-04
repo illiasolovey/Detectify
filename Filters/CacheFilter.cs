@@ -4,6 +4,9 @@ using Microsoft.Extensions.Caching.Memory;
 
 namespace PupSearch.Filters;
 
+/// <summary>
+/// Caches the output of an action method.
+/// </summary>
 [AttributeUsage(AttributeTargets.Method)]
 public class CacheFilter : Attribute, IAsyncActionFilter
 {

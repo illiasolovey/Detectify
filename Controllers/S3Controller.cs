@@ -5,16 +5,40 @@ using PupSearch.Services;
 
 namespace PupSearch.Controllers;
 
+/// <summary>
+/// API controller for managing S3 storage interaction.
+/// </summary>
 [ApiController]
 [Route("api/[controller]")]
 public class S3Controller : ControllerBase, IDisposable
 {
+    /// <summary>
+    /// <see cref="StorageService"/> implementation to be used.
+    /// </summary>
     public readonly IStorageService _storageService;
 
     public S3Controller(IStorageService storageService) =>
         _storageService = storageService;
 
+    /// <summary>
+    /// Uploads an object to the S3 bucket.
+    /// </summary>
+    /// <param name="filename">Represents the name of the file to be uploaded.</param>
+    /// <param name="formFile">Represents the file to be uploaded.</param>
+    /// <returns>An IActionResult indicating the status of the upload along with the name of the uploaded object.</returns>
+    /// <response code="200">Returns the name of the uploaded object. Provided name should be used to identify rendered file on the other S3 bucket after lambda function processing.</response>
+    /// <response code="400">Returns Bad Request response in case of client-side error.</response>
+    /// <remarks>
+    /// Sample request:
+    /// curl -X POST
+    ///   /api/s3/upload/sample.jpg
+    ///   -H 'Content-Type: multipart/form-data'
+    ///   -F 'formFile=@/path/to/local/sample.jpg'
+    /// </remarks>
     [HttpPost("upload/{filename}")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesDefaultResponseType]
     public async Task<IActionResult> UploadObject([Required] string filename, [Required] IFormFile formFile)
     {
         try
@@ -35,7 +59,25 @@ public class S3Controller : ControllerBase, IDisposable
         }
     }
 
+    /// <summary>
+    /// Retrieves an object from the S3 bucket.
+    /// </summary>
+    /// <param name="filename">Represents name of the file to be downloaded.</param>
+    /// <returns>An IActionResult indicating the status of the upload along with the file containing the downloaded object.</returns>
+    /// <response code="200">Returns <see cref="File"/> as a stream representing requested object. Name is always "pupserach-result". Response needs to be handled as Blob object (JS).</response>
+    /// <response code="400">Returns Bad Request response in case of client-side error.</response>
+    /// <response code="404">Returns Not Found response in case if requested file is not found on specified S3 bucket.</response>
+    /// <remarks>
+    /// Sample request:
+    /// curl -X GET /api/s3/download
+    ///   -H 'Content-Type: text/plain'
+    ///   -F 'sample.jpg'
+    /// </remarks>
     [HttpGet("download/{filename}")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesDefaultResponseType]
     public async Task<IActionResult> DownloadObject([Required] string filename)
     {
         try
@@ -67,6 +109,9 @@ public class S3Controller : ControllerBase, IDisposable
         };
     }
 
+    /// <summary>
+    /// Disposes <see cref="StorageService"/> instance.
+    /// </summary>
     public void Dispose()
     {
         _storageService?.Dispose();

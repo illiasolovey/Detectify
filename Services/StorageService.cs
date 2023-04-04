@@ -7,11 +7,19 @@ using PupSearch.Models;
 
 namespace PupSearch.Services
 {
+    /// <summary>
+    /// Provides an implementation of <see cref="IStorageService"/> interface to interact with a AWS storage service.
+    /// </summary>
     public class StorageService : IStorageService, IDisposable
     {
         private readonly string _putBucket;
         private readonly string _getBucket;
         private readonly AmazonS3Client _awsS3Client;
+
+        /// <summary>
+        /// Initializes a new instance of <see cref="StorageService"/> class.
+        /// </summary>
+        /// <param name="awsConfiguration">DI registered service instance of <see cref="AwsConfiguration"/></param>
 
         public StorageService(AwsConfiguration awsConfiguration)
         {
@@ -24,6 +32,7 @@ namespace PupSearch.Services
             );
         }
 
+        /// <inheritdoc />
         public async Task UploadObjectAsync(Models.S3Object s3Object)
         {
             try
@@ -44,6 +53,7 @@ namespace PupSearch.Services
             }
         }
 
+        /// <inheritdoc />
         public async Task<byte[]> DownloadObjectAsync(string filename)
         {
             try
@@ -78,6 +88,7 @@ namespace PupSearch.Services
             }
         }
 
+        /// <inheritdoc />
         public void Dispose()
         {
             _awsS3Client?.Dispose();
