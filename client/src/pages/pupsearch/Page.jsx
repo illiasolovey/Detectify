@@ -7,19 +7,36 @@ import {
   Paper,
   Typography,
 } from "@mui/material";
-import { useState } from "react";
-import { onFileInput, onFileSubmit } from "./controllers/MediaUploadHandlers";
+import { useEffect, useState } from "react";
+import {
+  onFileInput,
+  onFileSubmit,
+  useDefault,
+} from "./controllers/MediaUploadHandlers";
 import { invokeObjectAnalysis } from "./controllers/LambdaInteractionHandlers";
 import { PaperNote } from "./components/StyledComponents";
 import { quickGuide } from "./components/Content";
 import { DownloadButton } from "./components/DownloadButton";
+import axios from "axios";
 
 export default function HomePage() {
   const [currentFile, setCurrentFile] = useState(null);
   const [renderedFileName, setRenderedFileName] = useState();
   const [previewUrl, setPreviewUrl] = useState();
+  const [defaultPreviewUrl, setDefaulPreviewUrl] = useState();
   const [fileUploaded, setFileUploaded] = useState(false);
   const [fileAnalyzed, setFileAnalyzed] = useState(false);
+
+  useEffect(() => {
+    axios
+      .get("https://source.unsplash.com/random")
+      .then(async (response) => {
+        setDefaulPreviewUrl(response.request.responseURL);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }, []);
 
   return (
     <Grid container component="main" sx={{ height: "100vh" }}>
@@ -96,9 +113,9 @@ export default function HomePage() {
           {previewUrl && (
             <Button
               disabled={!fileUploaded}
-              onClick={() =>
-                invokeObjectAnalysis(
-                  currentFile,
+              onClick={async () =>
+                await invokeObjectAnalysis(
+                  currentFile.name,
                   setPreviewUrl,
                   setFileAnalyzed
                 )
@@ -106,6 +123,22 @@ export default function HomePage() {
               sx={{ my: 6 }}
             >
               <img src={previewUrl} alt="Preview" width="100%" height="100%" />
+            </Button>
+          )}
+          {defaultPreviewUrl && (
+            <Button
+              variant="outlined"
+              onClick={async () => {
+                const filename = await useDefault(
+                  defaultPreviewUrl,
+                  setPreviewUrl
+                );
+                console.log(filename);
+                invokeObjectAnalysis(filename, setPreviewUrl, setFileAnalyzed);
+              }}
+              sx={{ my: 6 }}
+            >
+              Use this image
             </Button>
           )}
           {fileAnalyzed && <DownloadButton filename={renderedFileName} />}
