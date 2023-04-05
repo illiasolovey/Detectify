@@ -4,7 +4,6 @@ import axios from "axios";
 export function DownloadButton({ filename }) {
   const handleDownload = async () => {
     const url2 = `http://localhost:5171/api/s3/download/${filename}`;
-    console.log(url2);
     try {
       const response = await axios({
         url: url2,

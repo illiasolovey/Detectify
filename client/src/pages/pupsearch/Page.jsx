@@ -5,6 +5,7 @@ import {
   CssBaseline,
   Grid,
   Paper,
+  Slider,
   Typography,
 } from "@mui/material";
 import { useEffect, useState } from "react";
@@ -26,6 +27,7 @@ export default function HomePage() {
   const [defaultPreviewUrl, setDefaulPreviewUrl] = useState();
   const [fileUploaded, setFileUploaded] = useState(false);
   const [fileAnalyzed, setFileAnalyzed] = useState(false);
+  const [analysisConfidenceLevel, setAnalysisConfidenceLevel] = useState(80);
 
   useEffect(() => {
     axios
@@ -111,19 +113,37 @@ export default function HomePage() {
             </Button>
           )}
           {previewUrl && (
-            <Button
-              disabled={!fileUploaded}
-              onClick={async () =>
-                await invokeObjectAnalysis(
-                  currentFile.name,
-                  setPreviewUrl,
-                  setFileAnalyzed
-                )
-              }
-              sx={{ my: 6 }}
-            >
-              <img src={previewUrl} alt="Preview" width="100%" height="100%" />
-            </Button>
+            <Box>
+              <Slider
+                aria-label="Temperature"
+                value={analysisConfidenceLevel}
+                onChange={((event, newValue) => setAnalysisConfidenceLevel(newValue))}
+                valueLabelDisplay="auto"
+                step={10}
+                marks
+                min={0}
+                max={99}
+              />
+              <Button
+                disabled={!fileUploaded}
+                onClick={async () =>
+                  await invokeObjectAnalysis(
+                    currentFile.name,
+                    analysisConfidenceLevel,
+                    setPreviewUrl,
+                    setFileAnalyzed
+                  )
+                }
+                sx={{ my: 6 }}
+              >
+                <img
+                  src={previewUrl}
+                  alt="Preview"
+                  width="100%"
+                  height="100%"
+                />
+              </Button>
+            </Box>
           )}
           {defaultPreviewUrl && (
             <Button
@@ -133,8 +153,7 @@ export default function HomePage() {
                   defaultPreviewUrl,
                   setPreviewUrl
                 );
-                console.log(filename);
-                invokeObjectAnalysis(filename, setPreviewUrl, setFileAnalyzed);
+                invokeObjectAnalysis(filename, analysisConfidenceLevel, setPreviewUrl, setFileAnalyzed);
               }}
               sx={{ my: 6 }}
             >
