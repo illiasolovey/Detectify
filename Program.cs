@@ -2,6 +2,7 @@ using System.Reflection;
 using Amazon.Runtime;
 using AWS.Logger;
 using AWS.Logger.SeriLog;
+using Microsoft.Extensions.Caching.Memory;
 using Microsoft.OpenApi.Models;
 using PupSearch.Filters;
 using PupSearch.Models;
@@ -14,7 +15,9 @@ builder.Services.AddControllers();
 builder.Services.AddMemoryCache();
 builder.Services.AddSingleton<AwsConfiguration>();
 builder.Services.AddScoped<IStorageService, StorageService>();
-builder.Services.AddSingleton<CacheFilter>();
+var cacheDurationSeconds = builder.Configuration.GetValue<double>("Caching:DurationSeconds");
+var cacheDuration = TimeSpan.FromSeconds(cacheDurationSeconds);
+builder.Services.AddScoped<CacheFilter>(provider => new CacheFilter(provider.GetRequiredService<IMemoryCache>(), cacheDuration));
 builder.Services.AddSingleton<LoggingFilter>();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(opts =>

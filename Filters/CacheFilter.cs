@@ -11,8 +11,10 @@ namespace PupSearch.Filters;
 public class CacheFilter : Attribute, IAsyncActionFilter
 {
     private readonly IMemoryCache _cache;
-    public CacheFilter(IMemoryCache cache) =>
-        _cache = cache;
+    private readonly TimeSpan _cacheDurationSeconds;
+    
+    public CacheFilter(IMemoryCache cache, TimeSpan cacheDurationSeconds) =>
+        (_cache, _cacheDurationSeconds) = (cache, cacheDurationSeconds);
 
     public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
     {
@@ -26,7 +28,7 @@ public class CacheFilter : Attribute, IAsyncActionFilter
         ActionExecutedContext executedContext = await next();
 
         if (executedContext.Exception == null && executedContext.Result is ContentResult contentResult)
-            _cache.Set(cacheKey, contentResult.Content, TimeSpan.FromSeconds(600));
+            _cache.Set(cacheKey, contentResult.Content, _cacheDurationSeconds);
         else
             throw new InvalidOperationException("Unable to cache the result because the wrapped function does not return ContentResult.");
     }
