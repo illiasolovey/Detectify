@@ -117,7 +117,9 @@ export default function HomePage() {
               <Slider
                 aria-label="Temperature"
                 value={analysisConfidenceLevel}
-                onChange={((event, newValue) => setAnalysisConfidenceLevel(newValue))}
+                onChange={(event, newValue) =>
+                  setAnalysisConfidenceLevel(newValue)
+                }
                 valueLabelDisplay="auto"
                 step={10}
                 marks
@@ -153,7 +155,12 @@ export default function HomePage() {
                   defaultPreviewUrl,
                   setPreviewUrl
                 );
-                invokeObjectAnalysis(filename, analysisConfidenceLevel, setPreviewUrl, setFileAnalyzed);
+                invokeObjectAnalysis(
+                  filename,
+                  analysisConfidenceLevel,
+                  setPreviewUrl,
+                  setFileAnalyzed
+                );
               }}
               sx={{ my: 6 }}
             >

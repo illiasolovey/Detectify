@@ -35,10 +35,11 @@ public class LambdaController : ControllerBase
     ///   -H 'Content-Type: text/plain'
     ///   -F 'sample.jpg'
     /// </remarks>
-    [HttpGet("object-analysis")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [ProducesDefaultResponseType]
+    [HttpGet("object-analysis")]
+    [ServiceFilter(typeof(LoggingFilter))]
     [ServiceFilter(typeof(CacheFilter))]
     public async Task<IActionResult> InvokeObjectAnalysis([Required] string filename, [Required, Range(0, 100)] float confidencePercentage)
     {

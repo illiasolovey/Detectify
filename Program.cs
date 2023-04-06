@@ -1,16 +1,21 @@
 using System.Reflection;
+using Amazon.Runtime;
+using AWS.Logger;
+using AWS.Logger.SeriLog;
 using Microsoft.OpenApi.Models;
 using PupSearch.Filters;
 using PupSearch.Models;
 using PupSearch.Services;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 builder.Services.AddMemoryCache();
 builder.Services.AddSingleton<AwsConfiguration>();
-builder.Services.AddSingleton<CacheFilter>();
 builder.Services.AddScoped<IStorageService, StorageService>();
+builder.Services.AddSingleton<CacheFilter>();
+builder.Services.AddSingleton<LoggingFilter>();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(opts =>
 {
@@ -35,6 +40,20 @@ builder.Services.AddSwaggerGen(opts =>
     var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
     opts.IncludeXmlComments(xmlPath);
 });
+var awsAccessKeyId = builder.Configuration["Aws:AccessKey"];
+var awsSecretAccessKey = builder.Configuration["Aws:SecretAccessKey"];
+var awsCredentials = new BasicAWSCredentials(awsAccessKeyId, awsSecretAccessKey);
+var awsConfiguration = new AWSLoggerConfig
+{
+    LogGroup = builder.Configuration["Serilog:LogGroup"],
+    Region = builder.Configuration["Aws:Region"],
+    Credentials = awsCredentials
+};
+var logger = new LoggerConfiguration()
+    .ReadFrom.Configuration(builder.Configuration)
+    .WriteTo.AWSSeriLog(awsConfiguration)
+    .CreateLogger();
+builder.Logging.AddSerilog(logger);
 
 var corsConfig = builder.Configuration.GetSection("Cors");
 string cors = corsConfig["PolicyName"] ?? throw new Exception("Cors policy name is not specified.");

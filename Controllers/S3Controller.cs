@@ -2,6 +2,8 @@ using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc;
 using PupSearch.Models;
 using PupSearch.Services;
+using PupSearch.Filters;
+using PupSearch.Utils;
 
 namespace PupSearch.Controllers;
 
@@ -16,9 +18,10 @@ public class S3Controller : ControllerBase, IDisposable
     /// <see cref="StorageService"/> implementation to be used.
     /// </summary>
     public readonly IStorageService _storageService;
+    public readonly ILogger _logger;
 
-    public S3Controller(IStorageService storageService) =>
-        _storageService = storageService;
+    public S3Controller(IStorageService storageService, ILogger<S3Controller> logger) =>
+        (_storageService, _logger) = (storageService, logger);
 
     /// <summary>
     /// Uploads an object to the S3 bucket.
@@ -35,10 +38,11 @@ public class S3Controller : ControllerBase, IDisposable
     ///   -H 'Content-Type: multipart/form-data'
     ///   -F 'formFile=@/path/to/local/sample.jpg'
     /// </remarks>
-    [HttpPost("upload/{filename}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesDefaultResponseType]
+    [HttpPost("upload/{filename}")]
+    [ServiceFilter(typeof(LoggingFilter))]
     public async Task<IActionResult> UploadObject([Required] string filename, [Required] IFormFile formFile)
     {
         try
@@ -47,10 +51,11 @@ public class S3Controller : ControllerBase, IDisposable
             await formFile.CopyToAsync(objectStream);
             var bucketObject = new S3Object()
             {
-                Name = filename,
+                Name = StorageServiceUtils.GenerateUUIDFilename(filename),
                 InputStream = objectStream
             };
             await _storageService.UploadObjectAsync(bucketObject);
+            _logger.LogInformation($"INT: Request results with \"{bucketObject.Name}\"");
             return Ok(bucketObject.Name);
         }
         catch (Exception ex)
@@ -73,17 +78,18 @@ public class S3Controller : ControllerBase, IDisposable
     ///   -H 'Content-Type: text/plain'
     ///   -F 'sample.jpg'
     /// </remarks>
-    [HttpGet("download/{filename}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesDefaultResponseType]
+    [HttpGet("download/{filename}")]
+    [ServiceFilter(typeof(LoggingFilter))]
     public async Task<IActionResult> DownloadObject([Required] string filename)
     {
         try
         {
             var responseStreamAsync = await _storageService.DownloadObjectAsync(filename);
-            string contentType = GetContentType(filename);
+            string contentType = MimeTypeUtils.GetContentType(filename);
             return File(responseStreamAsync, contentType, "pupsearch-result");
         }
         catch (FileNotFoundException ex)
@@ -94,19 +100,6 @@ public class S3Controller : ControllerBase, IDisposable
         {
             return BadRequest(ex.Message);
         }
-    }
-
-    private string GetContentType(string filename)
-    {
-        string extension = Path.GetExtension(filename);
-        return extension switch
-        {
-            ".jpg" or ".jpeg" => "image/jpeg",
-            ".png" => "image/png",
-            ".gif" => "image/gif",
-            ".bmp" => "image/bmp",
-            _ => "application/octet-stream"
-        };
     }
 
     /// <summary>
