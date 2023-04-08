@@ -33,6 +33,6 @@ public class LoggingFilter : Attribute, IActionFilter
             _logger.LogError($"[{dateTime}] {methodName} - Request from {remoteIpAddress} resulted an exception: {context.Exception.Message}");
             return;
         }
-        _logger.LogInformation($"[{dateTime}] {methodName} - Request from {remoteIpAddress} handled successfully.");
+        _logger.LogInformation($"[{dateTime}] {methodName} - Request from {remoteIpAddress} handled without exceptions.");
     }
 }

@@ -1,15 +1,11 @@
 import { Route, Routes } from "react-router";
-import HomePage from "./pages/home/Page";
-import PupSearchPage from "./pages/pupsearch/Page";
+import Page from "./page";
 
 export default function App() {
   return (
     <div>
       <main>
-        <Routes>
-          <Route path="/" element={<HomePage />} />
-          <Route path="/search" element={<PupSearchPage />} />
-        </Routes>
+        <Page />
       </main>
     </div>
   );

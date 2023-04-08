@@ -1,10 +1,10 @@
 import axios from "axios";
 import { toast } from "react-toastify";
-import { API_ENDPOINT } from "../../../../appsettings.json";
+import { API_ENDPOINT } from "../../../appsettings.json";
 
 const endpoint = API_ENDPOINT + "lambda/";
 
-export async function invokeObjectAnalysis(filename, confidence, setPreviewUrl, setFileAnalyzed) {
+export async function invokeObjectAnalysis(filename, confidence) {
   const url = endpoint + "object-analysis";
   const requestConfig = {
     params: { filename: filename, confidencePercentage: confidence },
@@ -14,15 +14,9 @@ export async function invokeObjectAnalysis(filename, confidence, setPreviewUrl, 
   };
   try {
     const response = await axios.get(url, requestConfig);
-    if (response.status !== 200) {
-      console.log(response.data);
-      return;
-    }
-    setPreviewUrl(response.data);
-    setFileAnalyzed(true);
-    toast.success("Lambda");
+    if (response.status !== 200) return;
+    return response.data;
   } catch (err) {
-    console.log(err);
     toast.error("Lamba error");
   }
 }
