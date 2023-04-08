@@ -46,40 +46,61 @@ export default function Page() {
     <Grid container component="main" sx={{ height: "100vh" }}>
       <CssBaseline />
       <ImagePreview previewUrl={previewUrl} />
-      <Grid item md={5} component={Paper}>
-        <Box sx={{ ...coveringBoxStyle, my: 8, mx: 4 }}>
+      <Grid item md={5} component={Paper} position="relative">
+        <Box sx={{ ...coveringBoxStyle, my: 12, mx: 4 }}>
           <Typography variant="h3">Search</Typography>
         </Box>
-        <Box style={coveringBoxStyle}>
-          <FileSelectionModal
-            setPreviewUrl={setPreviewUrl}
-            fileToDownload={fileToDownload}
-            setFileToDownload={setFileToDownload}
-            setFileAnalyzed={setFileAnalyzed}
-          />
-        </Box>
-        <Box style={coveringBoxStyle}>
-          <RandomImageModal
-            selectedRandomImageUrl={selectedRandomImageUrl}
-            setPreviewUrl={setPreviewUrl}
-            setFileToDownload={setFileToDownload}
-            setFileAnalyzed={setFileAnalyzed}
-          />
-        </Box>
+        <Grid container spacing={2} justifyContent="center">
+          <Grid item>
+            <Box style={coveringBoxStyle}>
+              <FileSelectionModal
+                setPreviewUrl={setPreviewUrl}
+                fileToDownload={fileToDownload}
+                setFileToDownload={setFileToDownload}
+                setFileAnalyzed={setFileAnalyzed}
+              />
+            </Box>
+          </Grid>
+          <Grid item>
+            <Box style={coveringBoxStyle}>
+              <RandomImageModal
+                selectedRandomImageUrl={selectedRandomImageUrl}
+                setPreviewUrl={setPreviewUrl}
+                setFileToDownload={setFileToDownload}
+                setFileAnalyzed={setFileAnalyzed}
+              />
+            </Box>
+          </Grid>
+        </Grid>
         {fileAnalyzed && (
-          <Button
-            variant="contained"
-            onClick={() => downloadFile(fileToDownload)}
+          <Box
+            sx={{
+              ...coveringBoxStyle,
+              display: "flex",
+              justifyContent: "center",
+            }}
           >
-            Download result
-          </Button>
+            <Button
+              variant="contained"
+              onClick={() => downloadFile(fileToDownload)}
+            >
+              Download result
+            </Button>
+          </Box>
         )}
         <Grid
           container
-          spacing={4}
-          justify="space-evenly"
           textAlign="center"
-          sx={{ position: "static" }}
+          justifyContent="center"
+          sx={{
+            position: "absolute",
+            bottom: 0,
+            left: 0,
+            right: 0,
+            mx: "auto",
+            mb: 4,
+            maxWidth: "90%",
+          }}
         >
           {quickGuide.map((footer) => (
             <Grid item xs key={footer.title}>

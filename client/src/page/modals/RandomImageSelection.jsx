@@ -27,14 +27,14 @@ export default function RandomImageModal(props) {
           >
             Random image analysis
           </Typography>
-          <Box sx={{ marginTop: 6 }}>
+          <Box sx={{ mt: 4 }}>
             <ConfidenceSlider
               confidence={analysisConfidenceLevel}
               setConfidence={setAnalysisConfidenceLevel}
             />
           </Box>
           <Button
-            variant="outlined"
+            variant="contained"
             onClick={async () => {
               const imageUrl = await useDefault(
                 selectedRandomImageUrl,
@@ -45,7 +45,7 @@ export default function RandomImageModal(props) {
               setFileAnalyzed(true);
               toast.success("Lambda success");
             }}
-            sx={{ my: 4 }}
+            sx={{ mt: 2 }}
           >
             Use this image
           </Button>

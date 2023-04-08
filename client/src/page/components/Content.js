@@ -1,14 +1,14 @@
 export const quickGuide = [
   {
     title: "Select File",
-    description: `Select file.`,
+    description: `Choose your local file or select current random image to analyze`,
   },
   {
     title: "Upload File",
-    description: "Upload image",
+    description: "Upload the selected file to begin analysis",
   },
   {
     title: "Analyze",
-    description: "Click on image to analyze",
+    description: "Wait for the file to be analyzed and view the results",
   },
 ];
