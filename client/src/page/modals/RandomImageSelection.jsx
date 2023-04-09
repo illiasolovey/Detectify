@@ -3,7 +3,6 @@ import ConfidenceSlider from "../components/ConfidenceSlider";
 import { useState } from "react";
 import { useDefault } from "../controllers/MediaUploadHandlers";
 import ModalLayout from "./ModalLayout";
-import { toast } from "react-toastify";
 
 export default function RandomImageModal(props) {
   const {
@@ -43,7 +42,6 @@ export default function RandomImageModal(props) {
               );
               setPreviewUrl(imageUrl);
               setFileAnalyzed(true);
-              toast.success("Lambda success");
             }}
             sx={{ mt: 2 }}
           >

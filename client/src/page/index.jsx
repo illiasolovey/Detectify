@@ -13,6 +13,7 @@ import axios from "axios";
 import ImagePreview from "./components/ImagePreview";
 import RandomImageModal from "./modals/RandomImageSelection";
 import FileSelectionModal from "./modals/FileSelection";
+import { toast } from "react-toastify";
 
 const coveringBoxStyle = {
   mx: 4,
@@ -37,7 +38,9 @@ export default function Page() {
         setPreviewUrl(url);
       })
       .catch((error) => {
-        toast.error("Oops, we can't fetch a random image now!");
+        toast.error(
+          "Oops, we can't fetch a random image now! Cause: " + error.message
+        );
         console.error(error);
       });
   }, []);

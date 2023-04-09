@@ -14,13 +14,34 @@ async function onFileInput(
 ) {
   setPreviewUrl(selectFile(event, setCurrentFile));
   setFileSelected(true);
-  toast.success("File selected");
 }
 async function onFileSubmition(file, setFileToDownload, setFileSubmitted) {
-  const filename = await uploadFile(file);
-  setFileToDownload(filename);
+  const filename = uploadFile(file);
+  toast.promise(filename, {
+    pending: "Uploading..",
+    success: "Uploaded successfully!",
+    error: "Error occurred while uploading the file",
+  });
+  setFileToDownload(await filename);
   setFileSubmitted(true);
-  toast.success("File uploaded");
+}
+async function handleImageAnalysis(
+  fileToDownload,
+  analysisConfidenceLevel,
+  setPreviewUrl,
+  setFileAnalyzed
+) {
+  const response = invokeObjectAnalysis(
+    fileToDownload,
+    analysisConfidenceLevel
+  );
+  toast.promise(response, {
+    pending: "Processing..",
+    success: "Analysis completed successfully!",
+    error: "Error occurred while analyzing the file",
+  });
+  setPreviewUrl(await response);
+  setFileAnalyzed(true);
 }
 
 export default function RandomImageModal(props) {
@@ -46,7 +67,11 @@ export default function RandomImageModal(props) {
           </Typography>
           <Grid container spacing={2} justifyContent="center">
             <Grid item>
-              <Button variant="contained" component="label" sx={{ mt: 4, mb: 1 }}>
+              <Button
+                variant="contained"
+                component="label"
+                sx={{ mt: 4, mb: 1 }}
+              >
                 Select File
                 <input
                   type="file"
@@ -81,23 +106,22 @@ export default function RandomImageModal(props) {
           </Grid>
 
           {fileSubmitted && (
-            <Box sx={{mt: 4}}>
+            <Box sx={{ mt: 4 }}>
               <ConfidenceSlider
                 confidence={analysisConfidenceLevel}
                 setConfidence={setAnalysisConfidenceLevel}
               />
               <Button
                 variant="contained"
-                onClick={async () => {
-                  const analyzedImageUrl = await invokeObjectAnalysis(
+                onClick={() =>
+                  handleImageAnalysis(
                     fileToDownload,
-                    analysisConfidenceLevel
-                  );
-                  setPreviewUrl(analyzedImageUrl);
-                  setFileAnalyzed(true);
-                  toast.success("Lambda success");
-                }}
-                sx={{mt: 2}}
+                    analysisConfidenceLevel,
+                    setPreviewUrl,
+                    setFileAnalyzed
+                  )
+                }
+                sx={{ mt: 2 }}
               >
                 Analyze
               </Button>

@@ -21,29 +21,23 @@ export async function uploadFile(file) {
       "content-type": "multipart/form-data",
     },
   };
-  try {
-    const response = await axios.post(url, formData, requestConfig);
-    return response.data;
-  } catch (err) {
-    toast.error("Upload error");
-  }
+  const response = await axios.post(url, formData, requestConfig);
+  const data = response.data;
+  if (data.errorType) throw data.errorType + ": " + data.errorMessage;
+  return response.data;
 }
 
 export async function downloadFile(filename) {
   const url = `${endpoint}download/${filename}`;
-  try {
-    const response = await axios.get(url, {
-      responseType: "blob",
-    });
-    const responseUrl = window.URL.createObjectURL(new Blob([response.data]));
-    const link = document.createElement("a");
-    link.href = responseUrl;
-    link.setAttribute("download", "pupsearch-result.png");
-    document.body.appendChild(link);
-    link.click();
-  } catch (error) {
-    console.log(error);
-  }
+  const response = await axios.get(url, {
+    responseType: "blob",
+  });
+  const responseUrl = window.URL.createObjectURL(new Blob([response.data]));
+  const link = document.createElement("a");
+  link.href = responseUrl;
+  link.setAttribute("download", "pupsearch-result.png");
+  document.body.appendChild(link);
+  link.click();
 }
 
 export async function useDefault(
@@ -54,8 +48,21 @@ export async function useDefault(
   const file = await fetch(fileUrl).then((r) => r.blob());
   const extension = file.type.split("/")[1];
   file.name = `random-image-request.${extension}`;
-  const filename = await uploadFile(file);
-  setFileToDownload(filename);
-  const response = await invokeObjectAnalysis(filename, analysisConfidenceLevel);
+  const filename = uploadFile(file);
+  toast.promise(filename, {
+    pending: "Uploading..",
+    success: "Uploaded successfully!",
+    error: "Error occurred while uploading the file",
+  });
+  setFileToDownload(await filename);
+  const response = invokeObjectAnalysis(
+    await filename,
+    analysisConfidenceLevel
+  );
+  toast.promise(response, {
+    pending: "Processing..",
+    success: "Analysis completed successfully!",
+    error: "Error occurred while analyzing the file",
+  });
   return response;
 }
