@@ -35,7 +35,7 @@ export async function downloadFile(filename) {
   const responseUrl = window.URL.createObjectURL(new Blob([response.data]));
   const link = document.createElement("a");
   link.href = responseUrl;
-  link.setAttribute("download", "pupsearch-result.png");
+  link.setAttribute("download", "detectify-result.png");
   document.body.appendChild(link);
   link.click();
 }

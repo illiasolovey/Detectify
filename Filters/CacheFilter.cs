@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.Caching.Memory;
 
-namespace PupSearch.Filters;
+namespace Detectify.Filters;
 
 /// <summary>
 /// Caches the output of an action method.

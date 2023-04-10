@@ -3,9 +3,9 @@ using Amazon;
 using Amazon.S3;
 using Amazon.S3.Model;
 using Amazon.S3.Transfer;
-using PupSearch.Models;
+using Detectify.Models;
 
-namespace PupSearch.Services
+namespace Detectify.Services
 {
     /// <summary>
     /// Provides an implementation of <see cref="IStorageService"/> interface to interact with a AWS storage service.

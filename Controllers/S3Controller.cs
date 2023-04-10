@@ -1,11 +1,11 @@
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc;
-using PupSearch.Models;
-using PupSearch.Services;
-using PupSearch.Filters;
-using PupSearch.Utils;
+using Detectify.Models;
+using Detectify.Services;
+using Detectify.Filters;
+using Detectify.Utils;
 
-namespace PupSearch.Controllers;
+namespace Detectify.Controllers;
 
 /// <summary>
 /// API controller for managing S3 storage interaction.
@@ -90,7 +90,7 @@ public class S3Controller : ControllerBase, IDisposable
         {
             var responseStreamAsync = await _storageService.DownloadObjectAsync(filename);
             string contentType = MimeTypeUtils.GetContentType(filename);
-            return File(responseStreamAsync, contentType, "pupsearch-result");
+            return File(responseStreamAsync, contentType, "Detectify-result");
         }
         catch (FileNotFoundException ex)
         {

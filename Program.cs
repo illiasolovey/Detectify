@@ -4,9 +4,9 @@ using AWS.Logger;
 using AWS.Logger.SeriLog;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.OpenApi.Models;
-using PupSearch.Filters;
-using PupSearch.Models;
-using PupSearch.Services;
+using Detectify.Filters;
+using Detectify.Models;
+using Detectify.Services;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -25,17 +25,17 @@ builder.Services.AddSwaggerGen(opts =>
     opts.SwaggerDoc("v1", new OpenApiInfo
     {
         Version = "v1",
-        Title = "PupSearch API",
-        Description = "ASP.NET Core 6 Web API backend for PupSearch Project.",
+        Title = "Detectify API",
+        Description = "ASP.NET Core 6 Web API backend for Detectify Project.",
         Contact = new OpenApiContact
         {
             Name = "Github repository",
-            Url = new Uri("https://github.com/illiasolovey/PupSearch"),
+            Url = new Uri("https://github.com/illiasolovey/Detectify"),
         },
         License = new OpenApiLicense
         {
             Name = "MIT License",
-            Url = new Uri("https://github.com/illiasolovey/PupSearch/blob/main/LICENSE")
+            Url = new Uri("https://github.com/illiasolovey/Detectify/blob/main/LICENSE")
         }
     });
 

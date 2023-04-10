@@ -1,6 +1,6 @@
-using PupSearch.Models;
+using Detectify.Models;
 
-namespace PupSearch.Services;
+namespace Detectify.Services;
 
 /// <summary>
 /// Handles storing and retrieving objects from AWS S3.

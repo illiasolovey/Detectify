@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Mvc.Filters;
 using Newtonsoft.Json;
 
-namespace PupSearch.Filters;
+namespace Detectify.Filters;
 
 /// <summary>
 /// Logs necessary information on and after every action method execution.

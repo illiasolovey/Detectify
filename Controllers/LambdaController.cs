@@ -1,14 +1,14 @@
-using PupSearch.Filters;
-using PupSearch.Models;
+using Detectify.Filters;
+using Detectify.Models;
 using Amazon.Lambda;
 using Amazon.Lambda.Model;
 using Microsoft.AspNetCore.Mvc;
 using System.Text;
 using System.ComponentModel.DataAnnotations;
-using PupsearchShared.Models;
+using DetectifyShared.Models;
 using Newtonsoft.Json;
 
-namespace PupSearch.Controllers;
+namespace Detectify.Controllers;
 
 /// <summary>
 /// Provides endpoints for invoking AWS Lambda functions.

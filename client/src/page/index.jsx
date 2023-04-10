@@ -68,6 +68,7 @@ export default function Page() {
         </Grid>
         {fileIsAnalyzed && (
           <FileDownloadButton
+            fileToDownload={fileToDownload}
             boxStyle={{
               ...coveringBoxStyle,
               display: "flex",

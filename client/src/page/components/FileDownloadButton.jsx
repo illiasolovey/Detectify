@@ -3,7 +3,7 @@ import { coveringBoxStyle } from "./DefaultStyles";
 import { downloadFile } from "../controllers/MediaUploadHandlers";
 
 export default function FileDownloadButton(props) {
-  const { boxStyle } = props;
+  const { fileToDownload, boxStyle } = props;
 
   return (
     <Box

@@ -1,4 +1,4 @@
-namespace PupSearch.Utils;
+namespace Detectify.Utils;
 
 public static class MimeTypeUtils
 {

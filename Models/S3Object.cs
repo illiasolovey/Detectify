@@ -1,4 +1,4 @@
-namespace PupSearch.Models;
+namespace Detectify.Models;
 
 /// <summary>
 /// Represents collection of properties used for proper commnication with S3 cloud storage.

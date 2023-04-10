@@ -1,4 +1,4 @@
-namespace PupSearch.Models;
+namespace Detectify.Models;
 
 /// <summary>
 /// Represents necessary configuration settings related to AWS services.

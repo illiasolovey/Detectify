@@ -1,4 +1,4 @@
-namespace PupSearch.Utils;
+namespace Detectify.Utils;
 
 public static class StorageServiceUtils
 {
@@ -6,6 +6,6 @@ public static class StorageServiceUtils
     {
         string extension = Path.GetExtension(filename);
         var uuid = Guid.NewGuid().ToString("D");
-        return $"pupsearch:{uuid}{extension}";
+        return $"Detectify:{uuid}{extension}";
     }
 }
