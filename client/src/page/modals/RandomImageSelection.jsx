@@ -10,7 +10,7 @@ export default function RandomImageModal(props) {
     selectedRandomImageUrl,
     setPreviewUrl,
     setFileToDownload,
-    setFileAnalyzed,
+    setFileIsAnalyzed,
   } = props;
   const [analysisConfidenceLevel, setAnalysisConfidenceLevel] = useState(80);
   const [boundingBoxColor, setBoundingBoxColor] = useState("#ff0000");
@@ -52,7 +52,7 @@ export default function RandomImageModal(props) {
                 setFileToDownload
               );
               setPreviewUrl(imageUrl);
-              setFileAnalyzed(true);
+              setFileIsAnalyzed(true);
             }}
             sx={{ mt: 2 }}
           >

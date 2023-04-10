@@ -32,7 +32,7 @@ async function handleImageAnalysis(
   boundingBoxColor,
   labelColor,
   setPreviewUrl,
-  setFileAnalyzed
+  setFileIsAnalyzed
 ) {
   const response = invokeObjectAnalysis(
     fileToDownload,
@@ -46,12 +46,16 @@ async function handleImageAnalysis(
     error: "Error occurred while analyzing the file",
   });
   setPreviewUrl(await response);
-  setFileAnalyzed(true);
+  setFileIsAnalyzed(true);
 }
 
 export default function RandomImageModal(props) {
-  const { setPreviewUrl, fileToDownload, setFileToDownload, setFileAnalyzed } =
-    props;
+  const {
+    setPreviewUrl,
+    fileToDownload,
+    setFileToDownload,
+    setFileIsAnalyzed,
+  } = props;
   const [currentFile, setCurrentFile] = useState(null);
   const [fileSelected, setFileSelected] = useState(null);
   const [fileSubmitted, setFileSubmitted] = useState(null);
@@ -133,7 +137,7 @@ export default function RandomImageModal(props) {
                     boundingBoxColor,
                     labelColor,
                     setPreviewUrl,
-                    setFileAnalyzed
+                    setFileIsAnalyzed
                   )
                 }
                 sx={{ mt: 2 }}

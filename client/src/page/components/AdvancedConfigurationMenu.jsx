@@ -1,6 +1,7 @@
 import { Box, Button, Grid, Typography } from "@mui/material";
 import { useState } from "react";
 import { BlockPicker } from "react-color";
+import { defaultMenuStyle, defaultPickerStyle } from "./DefaultStyles";
 
 const defaultColors = [
   "#ffffff", // white
@@ -13,20 +14,6 @@ const defaultColors = [
   "#0000ff", // blue
   "#00ffff", // cyan
 ];
-
-const defaultPickerStyle = {
-  display: "flex",
-  flexDirection: "column",
-  alignItems: "center",
-  justifyContent: "center",
-  my: 2,
-};
-const defaultMenuStyle = {
-  mt: 4,
-  display: "flex",
-  flexDirection: "column",
-  alignItems: "center",
-};
 
 export default function AdvancedConfigurationMenu(props) {
   const {
