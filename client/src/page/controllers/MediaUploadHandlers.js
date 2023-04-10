@@ -43,6 +43,8 @@ export async function downloadFile(filename) {
 export async function useDefault(
   fileUrl,
   analysisConfidenceLevel,
+  boundingBoxColor,
+  labelColor,
   setFileToDownload
 ) {
   const file = await fetch(fileUrl).then((r) => r.blob());
@@ -57,7 +59,9 @@ export async function useDefault(
   setFileToDownload(await filename);
   const response = invokeObjectAnalysis(
     await filename,
-    analysisConfidenceLevel
+    analysisConfidenceLevel,
+    boundingBoxColor,
+    labelColor
   );
   toast.promise(response, {
     pending: "Processing..",

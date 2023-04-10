@@ -5,6 +5,7 @@ import { selectFile, uploadFile } from "../controllers/MediaUploadHandlers";
 import ModalLayout from "./ModalLayout";
 import { toast } from "react-toastify";
 import { invokeObjectAnalysis } from "../controllers/LambdaInteractionHandlers";
+import AdvancedConfigurationMenu from "../components/AdvancedConfigurationMenu";
 
 async function onFileInput(
   event,
@@ -28,12 +29,16 @@ async function onFileSubmition(file, setFileToDownload, setFileSubmitted) {
 async function handleImageAnalysis(
   fileToDownload,
   analysisConfidenceLevel,
+  boundingBoxColor,
+  labelColor,
   setPreviewUrl,
   setFileAnalyzed
 ) {
   const response = invokeObjectAnalysis(
     fileToDownload,
-    analysisConfidenceLevel
+    analysisConfidenceLevel,
+    boundingBoxColor,
+    labelColor
   );
   toast.promise(response, {
     pending: "Processing..",
@@ -51,6 +56,8 @@ export default function RandomImageModal(props) {
   const [fileSelected, setFileSelected] = useState(null);
   const [fileSubmitted, setFileSubmitted] = useState(null);
   const [analysisConfidenceLevel, setAnalysisConfidenceLevel] = useState(80);
+  const [boundingBoxColor, setBoundingBoxColor] = useState("#ff0000");
+  const [labelColor, setLabelColor] = useState("#ffffff");
 
   return (
     <ModalLayout
@@ -111,12 +118,20 @@ export default function RandomImageModal(props) {
                 confidence={analysisConfidenceLevel}
                 setConfidence={setAnalysisConfidenceLevel}
               />
+              <AdvancedConfigurationMenu
+                boundingBoxColor={boundingBoxColor}
+                setBoundingBoxColor={setBoundingBoxColor}
+                labelColor={labelColor}
+                setLabelColor={setLabelColor}
+              />
               <Button
                 variant="contained"
                 onClick={() =>
                   handleImageAnalysis(
                     fileToDownload,
                     analysisConfidenceLevel,
+                    boundingBoxColor,
+                    labelColor,
                     setPreviewUrl,
                     setFileAnalyzed
                   )

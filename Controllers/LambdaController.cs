@@ -26,6 +26,8 @@ public class LambdaController : ControllerBase
     /// </summary>
     /// <param name="filename">Name of bucket object to analyze.</param>
     /// <param name="confidencePercentage">Percentage of accuracy of the performed label detection.</param>
+    /// <param name="boundingBoxHex">Hexadecimal color code (e.g. "#RRGGBB") representing the color of the bounding box.</param>
+    /// <param name="labelHex">Hexadecimal color code (e.g. "#RRGGBB") representing the color of the label displayed inside bounding box.</param>
     /// <returns>An IActionResult indicating the status of the upload along with the <see cref="ContentResult"/> containing the pre-signed URL to the rendered media file.</returns>
     /// <response code="200">Returns pre-signed url to rendered media file on "Get" bucket as <see cref="ContentResult"/> object.</response>
     /// <response code="500">Returns "Internal Server Error" response in case of any AWS related exceptions along with function name and exception message.</response>
@@ -41,7 +43,7 @@ public class LambdaController : ControllerBase
     [HttpGet("object-analysis")]
     [ServiceFilter(typeof(LoggingFilter))]
     [ServiceFilter(typeof(CacheFilter))]
-    public async Task<IActionResult> InvokeObjectAnalysis([Required] string filename, [Required, Range(0, 100)] float confidencePercentage)
+    public async Task<IActionResult> InvokeObjectAnalysis([Required] string filename, [Required, Range(0, 100)] float confidencePercentage, string boundingBoxHex, string labelHex)
     {
         string functionName = _awsConfiguration.LambdaFunctions.GetImageLabels;
         using AmazonLambdaClient lambdaClient = new(
@@ -52,7 +54,9 @@ public class LambdaController : ControllerBase
         LambdaPayload payload = new()
         {
             ObjectKey = filename,
-            Confidence = confidencePercentage
+            Confidence = confidencePercentage,
+            BoundingBoxColorHEX = boundingBoxHex,
+            LabelColorHEX = labelHex
         };
         string payloadJson = JsonConvert.SerializeObject(payload);
         InvokeRequest invokeRequest = new()

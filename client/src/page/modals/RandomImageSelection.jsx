@@ -3,6 +3,7 @@ import ConfidenceSlider from "../components/ConfidenceSlider";
 import { useState } from "react";
 import { useDefault } from "../controllers/MediaUploadHandlers";
 import ModalLayout from "./ModalLayout";
+import AdvancedConfigurationMenu from "../components/AdvancedConfigurationMenu";
 
 export default function RandomImageModal(props) {
   const {
@@ -12,6 +13,8 @@ export default function RandomImageModal(props) {
     setFileAnalyzed,
   } = props;
   const [analysisConfidenceLevel, setAnalysisConfidenceLevel] = useState(80);
+  const [boundingBoxColor, setBoundingBoxColor] = useState("#ff0000");
+  const [labelColor, setLabelColor] = useState("#ffffff");
 
   return (
     <ModalLayout
@@ -31,6 +34,12 @@ export default function RandomImageModal(props) {
               confidence={analysisConfidenceLevel}
               setConfidence={setAnalysisConfidenceLevel}
             />
+            <AdvancedConfigurationMenu
+              boundingBoxColor={boundingBoxColor}
+              setBoundingBoxColor={setBoundingBoxColor}
+              labelColor={labelColor}
+              setLabelColor={setLabelColor}
+            />
           </Box>
           <Button
             variant="contained"
@@ -38,6 +47,8 @@ export default function RandomImageModal(props) {
               const imageUrl = await useDefault(
                 selectedRandomImageUrl,
                 analysisConfidenceLevel,
+                boundingBoxColor,
+                labelColor,
                 setFileToDownload
               );
               setPreviewUrl(imageUrl);
