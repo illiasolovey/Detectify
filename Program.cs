@@ -13,7 +13,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 builder.Services.AddMemoryCache();
-builder.Services.AddSingleton<AwsConfiguration>();
+builder.Services.AddScoped<IAwsConfiguration, AwsConfiguration>();
 builder.Services.AddScoped<IStorageService, StorageService>();
 var cacheDurationSeconds = builder.Configuration.GetValue<double>("Caching:DurationSeconds");
 var cacheDuration = TimeSpan.FromSeconds(cacheDurationSeconds);

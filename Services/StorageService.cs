@@ -21,7 +21,7 @@ namespace Detectify.Services
         /// </summary>
         /// <param name="awsConfiguration">DI registered service instance of <see cref="AwsConfiguration"/></param>
 
-        public StorageService(AwsConfiguration awsConfiguration)
+        public StorageService(IAwsConfiguration awsConfiguration)
         {
             _putBucket = awsConfiguration.S3Buckets["Put"];
             _getBucket = awsConfiguration.S3Buckets["Get"];

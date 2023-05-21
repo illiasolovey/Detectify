@@ -22,6 +22,12 @@ public class LambdaController : ControllerBase, ILambdaController
         _awsConfiguration = awsConfiguration;
 
     /// <inheritdoc/>
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    [ProducesDefaultResponseType]
+    [HttpGet("object-analysis")]
+    [ServiceFilter(typeof(LoggingFilter))]
+    [ServiceFilter(typeof(CacheFilter))]
     public async Task<IActionResult> InvokeObjectAnalysis(string filename, [Required, Range(0, 100)] float confidencePercentage, string boundingBoxHex, string labelHex)
     {
         if (string.IsNullOrWhiteSpace(filename))

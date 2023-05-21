@@ -5,6 +5,7 @@ appsettings.Development.json
 appsettings.json
 Properties/
 aws-logger-errors.txt
+TestResults/
 
 node_modules
 package-lock.json
