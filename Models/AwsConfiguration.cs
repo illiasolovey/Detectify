@@ -3,11 +3,22 @@ namespace Detectify.Models;
 /// <summary>
 /// Represents necessary configuration settings related to AWS services.
 /// </summary>
-public class AwsConfiguration
+public class AwsConfiguration : IAwsConfiguration
 {
     private static IConfiguration _configuration = null!;
     private static string _nullDeserializationExceptionMessage =
         "Configuration property cannot be null. Verify that all values are present in appsettings.json configuration file.";
+
+    /// <inheritdoc/>
+    public string AccessKey { get; private set; }
+    /// <inheritdoc/>
+    public string SecretKey { get; private set; }
+    /// <inheritdoc/>
+    public string Region { get; private set; }
+    /// <inheritdoc/>
+    public Dictionary<string, string> LambdaFunctions { get; private set; }
+    /// <inheritdoc/>
+    public Dictionary<string, string> S3Buckets { get; private set; }
 
     /// <summary>
     /// Initializes a new instance of <see cref="AwsConfiguration"/> class.
@@ -16,60 +27,19 @@ public class AwsConfiguration
     public AwsConfiguration(IConfiguration configuration)
     {
         _configuration = configuration.GetSection("Aws");
-        AccessKey = _configuration["AccessKey"] ?? throw new Exception(_nullDeserializationExceptionMessage);
-        SecretKey = _configuration["SecretAccessKey"] ?? throw new Exception(_nullDeserializationExceptionMessage);
-        S3Buckets = new S3Bucket();
-        LambdaFunctions = new LambdaFunction();
-        Region = _configuration["Region"] ?? throw new Exception(_nullDeserializationExceptionMessage);
+        AccessKey = _configuration["AccessKey"] ?? throw new ArgumentNullException(_nullDeserializationExceptionMessage);
+        SecretKey = _configuration["SecretAccessKey"] ?? throw new ArgumentNullException(_nullDeserializationExceptionMessage);
+        Region = _configuration["Region"] ?? throw new ArgumentNullException(_nullDeserializationExceptionMessage);
+        LambdaFunctions = ReadDictionaryFromConfiguration("Lambda");
+        S3Buckets = ReadDictionaryFromConfiguration("S3Bucket");
     }
 
-    /// <summary>
-    /// Represents Aws Access Key.
-    /// </summary>
-    public string AccessKey { get; private set; }
-    /// <summary>
-    /// Represents Aws Secret Key.
-    /// </summary>
-    public string SecretKey { get; private set; }
-    /// <summary>
-    /// Represents a collection of avaliable S3 buckets.
-    /// </summary>
-    public S3Bucket S3Buckets { get; private set; }
-    /// <summary>
-    /// Represents a collection of avaliable Lambda functions.
-    /// </summary>
-    public LambdaFunction LambdaFunctions { get; private set; }
-    /// <summary>
-    /// Represents the Aws Region to be used.
-    /// </summary>
-    public string Region { get; private set; }
-
-    /// <summary>
-    /// Represents configuration settings for the available Lambda functions.
-    /// </summary>
-    public record LambdaFunction
+    private Dictionary<string, string> ReadDictionaryFromConfiguration(string sectionName)
     {
-        public LambdaFunction() =>
-            GetImageLabels = _configuration["Lambda:Label"] ?? throw new Exception(_nullDeserializationExceptionMessage);
-
-        /// <summary>
-        /// Represents the name of the Lambda function used to retrieve image labels.
-        /// </summary>
-        public string GetImageLabels { get; init; }
-    }
-    
-    /// <summary>
-    /// Represents configuration settings for the available S3 buckets.
-    /// </summary>
-    public record S3Bucket
-    {
-        public S3Bucket()
-        {
-            Put = _configuration["S3Bucket:Put"] ?? throw new Exception(_nullDeserializationExceptionMessage);
-            Get = _configuration["S3Bucket:Get"] ?? throw new Exception(_nullDeserializationExceptionMessage);
-        }
-
-        public string Put { get; init; }
-        public string Get { get; init; }
+        var dictionary = new Dictionary<string, string>();
+        var section = _configuration.GetSection(sectionName);
+        foreach (var childSection in section.GetChildren())
+            dictionary[childSection.Key] = childSection.Value ?? throw new ArgumentNullException(_nullDeserializationExceptionMessage);
+        return dictionary;
     }
 }

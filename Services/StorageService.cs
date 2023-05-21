@@ -23,8 +23,8 @@ namespace Detectify.Services
 
         public StorageService(AwsConfiguration awsConfiguration)
         {
-            _putBucket = awsConfiguration.S3Buckets.Put;
-            _getBucket = awsConfiguration.S3Buckets.Get;
+            _putBucket = awsConfiguration.S3Buckets["Put"];
+            _getBucket = awsConfiguration.S3Buckets["Get"];
             _awsS3Client = new AmazonS3Client(
                 awsConfiguration.AccessKey,
                 awsConfiguration.SecretKey,

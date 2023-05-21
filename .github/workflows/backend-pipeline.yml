@@ -1,4 +1,4 @@
-name: .NET API CI pipeline
+name: Backend CI/CD pipeline
 
 on:
   push:
@@ -8,7 +8,6 @@ on:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
 
     steps:
