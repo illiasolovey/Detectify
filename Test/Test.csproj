@@ -9,4 +9,8 @@
     <IsPackable>false</IsPackable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Detectify.csproj" />
+  </ItemGroup>
+
 </Project>

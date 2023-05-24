@@ -5,7 +5,6 @@ using AWS.Logger.SeriLog;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.OpenApi.Models;
 using Detectify.Filters;
-using Detectify.Models;
 using Detectify.Services;
 using Serilog;
 

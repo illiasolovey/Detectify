@@ -34,6 +34,15 @@ public class AwsConfiguration : IAwsConfiguration
         S3Buckets = ReadDictionaryFromConfiguration("S3Bucket");
     }
 
+    public AwsConfiguration(string accessKey, string secretKey, string region, Dictionary<string, string> lambdaFunctions, Dictionary<string, string> s3Buckets)
+    {
+        AccessKey = accessKey;
+        SecretKey = secretKey;
+        Region = region;
+        LambdaFunctions = lambdaFunctions;
+        S3Buckets = s3Buckets;
+    }
+
     private Dictionary<string, string> ReadDictionaryFromConfiguration(string sectionName)
     {
         var dictionary = new Dictionary<string, string>();

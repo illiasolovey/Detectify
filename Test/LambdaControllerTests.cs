@@ -1,20 +1,31 @@
-using Xunit;
-using Moq;
-using Detectify.Controllers;
-using Detectify.Models;
-using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Configuration;
 
 namespace Detectify.Tests
 {
     public class LambdaControllerTests
     {
         private readonly ILambdaController _lambdaController;
-        private Mock<IAwsConfiguration> _awsConfigurationMock;
+        private readonly IAwsConfiguration _awsConfiguration;
 
         public LambdaControllerTests()
         {
-            _awsConfigurationMock = InitializeConfigurationMock();
-            _lambdaController = new LambdaController(_awsConfigurationMock.Object);
+            _awsConfiguration = new AwsConfiguration(
+                accessKey: Environment.GetEnvironmentVariable("AWS_ACCESS_KEY_ID")!,
+                secretKey: Environment.GetEnvironmentVariable("AWS_SECRET_ACCESS_KEY")!,
+                region: Environment.GetEnvironmentVariable("AWS_REGION")!,
+                lambdaFunctions: new Dictionary<string, string>
+                {
+                    { "ObjectAnalysis", Environment.GetEnvironmentVariable("AWS_LAMBDA_OBJECT_ANALYSIS")! },
+                    { "Celebrity", Environment.GetEnvironmentVariable("AWS_LAMBDA_CELEBRITY_RECOGNITION")! }
+                },
+                s3Buckets: new Dictionary<string, string>
+                {
+                    { "Put", Environment.GetEnvironmentVariable("AWS_S3_INPUT_BUCKET")! },
+                    { "Get", Environment.GetEnvironmentVariable("AWS_S3_OUTPUT_BUCKET")! }
+                }
+            );
+            _lambdaController = new LambdaController(_awsConfiguration);
         }
 
         [Fact]
@@ -59,21 +70,6 @@ namespace Detectify.Tests
             var contentResult = Assert.IsType<ContentResult>(result);
             Assert.Equal(StatusCodes.Status200OK, contentResult.StatusCode);
             Assert.Equal("text/plain", contentResult.ContentType);
-        }
-
-        private Mock<IAwsConfiguration> InitializeConfigurationMock()
-        {
-            Mock<IAwsConfiguration> awsConfig = new Mock<IAwsConfiguration>();
-            awsConfig.Setup(x => x.AccessKey).Returns(Environment.GetEnvironmentVariable("AWS_ACCESS_KEY_ID")!);
-            awsConfig.Setup(x => x.SecretKey).Returns(Environment.GetEnvironmentVariable("AWS_SECRET_ACCESS_KEY")!);
-            awsConfig.Setup(x => x.Region).Returns(Environment.GetEnvironmentVariable("AWS_REGION")!);
-            var lambdaFunctions = new Dictionary<string, string>
-            {
-                { "ObjectAnalysis", Environment.GetEnvironmentVariable("AWS_LAMBDA_OBJECT_ANALYSIS")! },
-                { "Celebrity", Environment.GetEnvironmentVariable("AWS_LAMBDA_CELEBRITY_RECOGNITION")! }
-            };
-            awsConfig.Setup(x => x.LambdaFunctions).Returns(lambdaFunctions);
-            return awsConfig;
         }
     }
 }

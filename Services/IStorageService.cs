@@ -1,5 +1,3 @@
-using Detectify.Models;
-
 namespace Detectify.Services;
 
 /// <summary>
