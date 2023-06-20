@@ -1,8 +1,6 @@
 using Detectify.Filters;
-using Detectify.Models;
 using Amazon.Lambda;
 using Amazon.Lambda.Model;
-using Microsoft.AspNetCore.Mvc;
 using System.Text;
 using System.ComponentModel.DataAnnotations;
 using DetectifyShared.Models;

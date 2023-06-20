@@ -6,6 +6,7 @@ appsettings.json
 Properties/
 aws-logger-errors.txt
 TestResults/
+main.drawio
 
 node_modules
 package-lock.json

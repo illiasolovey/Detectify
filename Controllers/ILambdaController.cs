@@ -1,6 +1,4 @@
 using System.ComponentModel.DataAnnotations;
-using Detectify.Filters;
-using Microsoft.AspNetCore.Mvc;
 
 namespace Detectify.Models;
 

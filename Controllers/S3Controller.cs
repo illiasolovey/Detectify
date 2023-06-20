@@ -1,6 +1,4 @@
 using System.ComponentModel.DataAnnotations;
-using Microsoft.AspNetCore.Mvc;
-using Detectify.Models;
 using Detectify.Services;
 using Detectify.Filters;
 using Detectify.Utils;
@@ -45,6 +43,9 @@ public class S3Controller : ControllerBase, IDisposable
     [ServiceFilter(typeof(LoggingFilter))]
     public async Task<IActionResult> UploadObject([Required] string filename, [Required] IFormFile formFile)
     {
+        if (formFile.Length == 0)
+            return BadRequest("Incoming file contains no data.");
+
         try
         {
             await using var objectStream = new MemoryStream();
